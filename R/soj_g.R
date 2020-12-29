@@ -83,6 +83,8 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
   }
 
   if(export_format == 'sojourn'){
+    filename_column = data.frame(Filename = basename(filepath), stringsAsFactors = F)
+    ag_step3_summary = cbind(filename_column, ag_step3_summary)
     return(ag_step3_summary)
   }
 
@@ -90,6 +92,9 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
     data_summary$step3_estimate_intensity = rep(ag_step3_summary$step3_estimate_intensity, times = ag_step3_summary$step3_durations)
     data_summary$step3_estimate_type = rep(ag_step3_summary$step3_estimate_type, times = ag_step3_summary$step3_durations)
     data_summary$step3_estimate_locomotion = rep(ag_step3_summary$step3_estimate_locomotion, times = ag_step3_summary$step3_durations)
+
+    filename_column = data.frame(Filename = basename(filepath), stringsAsFactors = F)
+    data_summary = cbind(filename_column, data_summary)
 
     return(data_summary)
   }
@@ -102,6 +107,9 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
     data$step3_estimate_intensity = rep(data_summary$step3_estimate_intensity, each = freq)
     data$step3_estimate_type = rep(data_summary$step3_estimate_type, each = freq)
     data$step3_estimate_locomotion = rep(data_summary$step3_estimate_locomotion, each = freq)
+
+    filename_column = data.frame(Filename = basename(filepath), stringsAsFactors = F)
+    data = cbind(filename_column, data)
 
     return(data)
   }
