@@ -106,7 +106,7 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
     data_summary$step3_estimate_locomotion = rep(ag_step3_summary$step3_estimate_locomotion, times = ag_step3_summary$step3_durations)
 
     filename_column = data.frame(Filename = basename(filepath),
-                                 Timestamp = data$Timestamp[seq(1, nrow(data), by = samp_freq)[1:nrow(data_summary)]],
+                                 Timestamp = data$Timestamp[seq(1, nrow(data), by = freq)[1:nrow(data_summary)]],
                                  stringsAsFactors = F)
     data_summary = cbind(filename_column, data_summary)
 
