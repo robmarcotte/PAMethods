@@ -2,12 +2,24 @@
 #
 # Function to apply the Soj-g method to raw wrist accelerometer data
 #
-# Library dependencies: matrixStats, data.table, zoo, dplyr, randomForest
+# Library dependencies: matrixStats, data.table, zoo, dplyr, randomForest, tools, AGread
 
 soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_threshold = .00375, step2_nest_length = 5, step3_nest_length = 60, step3_orig_soj_length_min = 180){
 
+  filetype = file_ext(filepath)
+
   # Assuming that the filepath provided is an .rds file
-  data = readRDS(filepath)
+  if(filetype == 'rds'){
+    data = readRDS(filepath)
+    filename_column = data.frame(filename = basename(filepath), stringsAsFactors = F)
+    data = cbind(filename_column, data)
+  }
+
+  if(filetype == 'csv'){
+    data = AGread::read_AG_raw(filepath, return_raw = T)
+    colnames(data) = c('filename','date_processed','Timestamp','AxisX','AxisY','AxisZ')
+    data$VM = sqrt(data$AxisX^2 + data$AxisY^2 + data$AxisZ^2)
+  }
 
   # Step 1 - Identify likely inactive periods
   data_summary = data.frame(index = 1:(nrow(data)/freq), sd_vm = rowSds(matrix(data$VM, ncol = freq, byrow = T)))
@@ -107,9 +119,6 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
     data$step3_estimate_intensity = rep(data_summary$step3_estimate_intensity, each = freq)
     data$step3_estimate_type = rep(data_summary$step3_estimate_type, each = freq)
     data$step3_estimate_locomotion = rep(data_summary$step3_estimate_locomotion, each = freq)
-
-    filename_column = data.frame(Filename = basename(filepath), stringsAsFactors = F)
-    data = cbind(filename_column, data)
 
     return(data)
   }
