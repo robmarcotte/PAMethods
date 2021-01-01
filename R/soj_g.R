@@ -16,8 +16,8 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
   }
 
   if(filetype == 'csv'){
-    data = AGread::read_AG_raw(filepath, return_raw = T)
-    colnames(data) = c('filename','date_processed','Timestamp','AxisX','AxisY','AxisZ')
+    data = MOCAfunctions::read_ag(filepath, ENMO_calibrate = F, device_serial_calibrate = F, parse_timestamp = F)
+    # colnames(data) = c('filename','date_processed','Timestamp','AxisX','AxisY','AxisZ') # uncomment when using AGread read_AG_raw function. Redacted due to timestamp issues
     data$VM = sqrt(data$AxisX^2 + data$AxisY^2 + data$AxisZ^2)
   }
 
