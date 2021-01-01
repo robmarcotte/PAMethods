@@ -42,7 +42,7 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
   data$step2_sojourn_index = rep(data_summary$step2_sojourn_index, each = freq)
   data$step2_sojourn_duration = rep(data_summary$step2_sojourn_duration, each = freq)
 
-  ag_step2_summary = ag_feature_calc(data, samp_freq = 80, window = 'sojourns', soj_colname = 'step2_sojourn_index', seconds_colname = 'step2_sojourn_duration')
+  ag_step2_summary = ag_feature_calc(data, samp_freq = freq, window = 'sojourns', soj_colname = 'step2_sojourn_index', seconds_colname = 'step2_sojourn_duration')
   ag_step2_summary$step2_durations = rle(data_summary$step2_sojourn_index)[[1]]
 
   ag_step2_summary$step2_estimate = predict(PAMethods::stage2_unclassified_rf, newdata = ag_step2_summary, type = 'class')
@@ -65,7 +65,7 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
   data$step3_sojourn_duration = rep(data_summary$step3_sojourn_duration, each = freq)
 
   # Compute features in final sojourns
-  ag_step3_summary = ag_feature_calc(data, samp_freq = 80, window = 'sojourns', soj_colname = 'step3_sojourn_index', seconds_colname = 'step3_sojourn_duration')
+  ag_step3_summary = ag_feature_calc(data, samp_freq = freq, window = 'sojourns', soj_colname = 'step3_sojourn_index', seconds_colname = 'step3_sojourn_duration')
   ag_step3_summary$step3_durations = rle(data_summary$step3_sojourn_index)[[1]]
   final_step2_estimate = data_summary %>% group_by(step3_sojourn_index) %>%
     summarize(step2_estimate = dplyr::first(step2_estimate)) %>% select(step2_estimate) %>% ungroup() %>% as.vector()
