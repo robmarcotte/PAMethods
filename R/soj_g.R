@@ -22,7 +22,7 @@ soj_g = function(filepath, export_format = 'session', freq = 80, step1_sd_thresh
   }
 
   # Step 1 - Identify likely inactive periods
-  data_summary = data.frame(index = 1:(nrow(data)/freq), sd_vm = rowSds(matrix(data$VM, ncol = freq, byrow = T)))
+  data_summary = data.frame(index = 1:ceiling(nrow(data)/freq), sd_vm = rowSds(matrix(data$VM, ncol = freq, byrow = T)))
   data_summary$step1_estimate = ifelse(data_summary$sd_vm <=step1_sd_threshold, 1, 0) # 1 = inactive, 0 = unclassified
 
   seconds_index = seq(1, nrow(data), by = freq)
